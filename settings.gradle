@@ -1,0 +1,24 @@
+
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+        maven {
+            credentials {
+                username = "$MAVEN_USER"
+                password = "$MAVEN_PASS"
+            }
+            url = uri("https://repositories.tomtom.com/artifactory/maven")
+        }
+    }
+}
+rootProject.name = "tomtomnav"
+include ':app'
