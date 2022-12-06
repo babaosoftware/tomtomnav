@@ -254,6 +254,7 @@ class MainActivity : AppCompatActivity() {
         val routePlan = RoutePlan(route, routePlanningOptions)
         navigationFragment.startNavigation(routePlan)
         navigationFragment.addNavigationListener(navigationListener)
+        navigationFragment.navigationView.showSpeedView()
         tomTomNavigation.addOnProgressUpdateListener(onProgressUpdateListener)
     }
 
@@ -282,12 +283,12 @@ class MainActivity : AppCompatActivity() {
     }
     private val onCameraChangeListener by lazy {
         OnCameraChangeListener {
-            val cameraTrackingMode = tomTomMap.cameraTrackingMode()
-            if (cameraTrackingMode == CameraTrackingMode.FOLLOW_ROUTE) {
-                navigationFragment.navigationView.showSpeedView()
-            } else {
-                navigationFragment.navigationView.hideSpeedView()
-            }
+//            val cameraTrackingMode = tomTomMap.cameraTrackingMode()
+//            if (cameraTrackingMode == CameraTrackingMode.FOLLOW_ROUTE) {
+//                navigationFragment.navigationView.showSpeedView()
+//            } else {
+//                navigationFragment.navigationView.hideSpeedView()
+//            }
         }
     }
 
