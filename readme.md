@@ -1,14 +1,14 @@
 ## TomTom Navigation App
-# Based on sample code from this tutorial: https://developer.tomtom.com/android/navigation/documentation/tutorials/navigation-use-case
+##### Based on sample code from this tutorial: https://developer.tomtom.com/android/navigation/documentation/tutorials/navigation-use-case
 
-To run the app create these files:
-/apikey.properties with the content bellow and add your TomTom map api key:
+##### To run the app create these files:
+###### **/apikey.properties** with the content bellow and add your TomTom map api key:
 
 ```
 MAP_KEY="<your map key>"
 ```
 
-/gradle.properties with the content bellow, and at the end of it add your TomTom maven repository credentials:
+###### **/gradle.properties** with the content bellow, and at the end of it add your TomTom maven repository credentials:
 
 ```
 # Project-wide Gradle settings.
