@@ -4,10 +4,13 @@
 To run the app create these files:
 /apikey.properties with the content bellow and add your TomTom map api key:
 
+```
 MAP_KEY="<your map key>"
+```
 
 /gradle.properties with the content bellow, and at the end of it add your TomTom maven repository credentials:
 
+```
 # Project-wide Gradle settings.
 # IDE (e.g. Android Studio) users:
 # Gradle settings configured through the IDE *will override*
@@ -33,3 +36,4 @@ kotlin.code.style=official
 android.nonTransitiveRClass=true
 MAVEN_USER="<maven user name"
 MAVEN_PASS="<mave pass>"
+```
