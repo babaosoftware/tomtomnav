@@ -2,6 +2,8 @@ package com.babaosoftware.tomtomnav
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -10,9 +12,11 @@ import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
+import android.view.WindowManager
 import android.widget.FrameLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.babaosoftware.tomtomnav.MainActivity.Companion.ZOOM_TO_ROUTE_PADDING
@@ -33,12 +37,14 @@ import com.tomtom.sdk.map.display.camera.CameraOptions
 import com.tomtom.sdk.map.display.camera.CameraTrackingMode
 import com.tomtom.sdk.map.display.camera.OnCameraChangeListener
 import com.tomtom.sdk.map.display.common.screen.Padding
+import com.tomtom.sdk.map.display.gesture.OnMapLongClickListener
 import com.tomtom.sdk.map.display.image.ImageFactory
 import com.tomtom.sdk.map.display.location.LocationMarkerOptions
 import com.tomtom.sdk.map.display.marker.MarkerOptions
 import com.tomtom.sdk.map.display.route.Instruction
 import com.tomtom.sdk.map.display.route.RouteOptions
 import com.tomtom.sdk.map.display.ui.MapFragment
+import com.tomtom.sdk.map.display.ui.compass.CompassButton
 import com.tomtom.sdk.navigation.NavigationConfiguration
 import com.tomtom.sdk.navigation.NavigationError
 import com.tomtom.sdk.navigation.OnProgressUpdateListener
@@ -67,7 +73,7 @@ enum class AppState{
     INITIAL, ROUTE, NAVIGATION,
 }
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), SettingsCallback {
 
     private val mapKey = BuildConfig.MAP_KEY
     private lateinit var mapFragment: MapFragment
@@ -83,9 +89,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var routeStart: ExtendedFloatingActionButton
     private lateinit var navStart: ExtendedFloatingActionButton
+    private lateinit var navStop: ExtendedFloatingActionButton
+    private lateinit var settings: ExtendedFloatingActionButton
 
 
-    private val startZoom = 10.0
     private val myRoute = listOf(
         GeoPoint(41.416841, -73.4737747),
         GeoPoint(41.415115, -73.477221),
@@ -102,24 +109,33 @@ class MainActivity : AppCompatActivity() {
             AppState.INITIAL -> {
                 routeStart.visibility = View.VISIBLE
                 navStart.visibility = View.GONE
+                navStop.visibility = View.GONE
+                settings.visibility = View.VISIBLE
             }
             AppState.ROUTE -> {
                 routeStart.visibility = View.GONE
                 navStart.visibility = View.VISIBLE
+                navStop.visibility = View.VISIBLE
+                settings.visibility = View.GONE
             }
             AppState.NAVIGATION -> {
                 routeStart.visibility = View.GONE
                 navStart.visibility = View.GONE
+                navStop.visibility = View.VISIBLE
+                settings.visibility = View.GONE
             }
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        settingsCallback = this
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         routeStart = binding.routeStart
         navStart = binding.navStart
+        navStop = binding.navStop
+        settings = binding.settings
 
         changeState()
         initMap()
@@ -127,7 +143,7 @@ class MainActivity : AppCompatActivity() {
         routeStart.setOnClickListener {
             appState = AppState.ROUTE
             changeState()
-            initRouting()
+            initRouting(myRoute)
         }
 
         navStart.setOnClickListener {
@@ -135,10 +151,20 @@ class MainActivity : AppCompatActivity() {
             changeState()
             initNavigation()
         }
+
+        navStop.setOnClickListener {
+            appState = AppState.INITIAL
+            changeState()
+            stopNavigation()
+        }
+
+        settings.setOnClickListener {
+            startActivity(Intent(this, SettingsActivity::class.java))
+        }
     }
 
     private fun initMap() {
-        val mapOptions = MapOptions(mapKey = mapKey, cameraOptions = CameraOptions(zoom = startZoom))
+        val mapOptions = MapOptions(mapKey = mapKey, cameraOptions = CameraOptions(zoom = configInstance.startZoom))
         mapFragment = MapFragment.newInstance(mapOptions)
         supportFragmentManager.beginTransaction()
             .replace(R.id.map_container, mapFragment)
@@ -146,24 +172,28 @@ class MainActivity : AppCompatActivity() {
         mapFragment.getMapAsync { map ->
             tomTomMap = map
             setupPermissions()
-            mapFragment.zoomControlsView.isVisible = true
+            if (configInstance.showZoomControl)
+                mapFragment.zoomControlsView.isVisible = true
+            if (configInstance.showCompass)
+                mapFragment.compassButton.visibilityPolicy = if (configInstance.showCompass) CompassButton.VisibilityPolicy.VISIBLE else CompassButton.VisibilityPolicy.INVISIBLE
+            setupMapListeners()
         }
     }
 
-    private fun initRouting() {
+    private fun initRouting(route: List<GeoPoint>) {
 
-        val size = myRoute.size
+        val size = route.size
         var itinerary: Itinerary
         if (size > 2){
             var wayPoints = listOf<GeoPoint>()
             for (i in 1..size - 2){
-                wayPoints += myRoute[i]
+                wayPoints += route[i]
             }
-            itinerary = Itinerary(myRoute[0], myRoute[size - 1], wayPoints)
+            itinerary = Itinerary(route[0], route[size - 1], wayPoints)
             addWayPointsMarkers(wayPoints)
         }
         else{
-            itinerary = Itinerary(myRoute[0], myRoute[size - 1])
+            itinerary = Itinerary(route[0], route[size - 1])
         }
 
         routePlanner =
@@ -194,7 +224,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun buildMarkerBitmap(position: Int): Bitmap {
+    private fun buildMarkerBitmap(position: Int): Bitmap {
         val view = LayoutInflater.from(this).inflate(
             R.layout.rounded_button,
             null,
@@ -258,6 +288,18 @@ class MainActivity : AppCompatActivity() {
         tomTomMap.setLocationProvider(locationProvider)
         val locationMarker = LocationMarkerOptions(type = LocationMarkerOptions.Type.POINTER)
         tomTomMap.enableLocationMarker(locationMarker)
+    }
+
+    private fun setupMapListeners() {
+        tomTomMap.addOnMapLongClickListener(listener = OnMapLongClickListener {
+            if (appState == AppState.INITIAL){
+                val start = locationProvider.lastKnownLocation!!.position
+                appState = AppState.ROUTE
+                changeState()
+                initRouting(listOf(start, it))
+            }
+            true
+        })
     }
 
     private val routePlanningCallback = object : RoutePlanningCallback {
@@ -326,6 +368,7 @@ class MainActivity : AppCompatActivity() {
             .commitNow()
     }
     private fun startNavigation(route: Route) {
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         initNavigationFragment()
         navigationFragment.setTomTomNavigation(tomTomNavigation)
         val routePlan = RoutePlan(route, routePlanningOptions)
@@ -340,8 +383,10 @@ class MainActivity : AppCompatActivity() {
             tomTomMap.addOnCameraChangeListener(onCameraChangeListener)
             tomTomMap.changeCameraTrackingMode(CameraTrackingMode.FOLLOW_ROUTE)
             tomTomMap.enableLocationMarker(LocationMarkerOptions(LocationMarkerOptions.Type.CHEVRON))
-            setSimulationLocationProviderToNavigation()
-            setMapMatchedLocationProvider()
+            if (configInstance.isSimulated)
+                setSimulationLocationProviderToNavigation()
+            if (configInstance.isMapMatched)
+                setMapMatchedLocationProvider()
             setMapNavigationPadding()
         }
 
@@ -360,7 +405,7 @@ class MainActivity : AppCompatActivity() {
     }
     private val onCameraChangeListener by lazy {
         OnCameraChangeListener {
-            //TODO: This will make the speed view to blink - solved in subsequent versions of the sdk
+            // TODO: This will make the speed view to blink - solved in subsequent versions of the sdk
 //            val cameraTrackingMode = tomTomMap.cameraTrackingMode()
 //            if (cameraTrackingMode == CameraTrackingMode.FOLLOW_ROUTE) {
 //                navigationFragment.navigationView.showSpeedView()
@@ -375,12 +420,9 @@ class MainActivity : AppCompatActivity() {
         for (coordinate in route.routeCoordinates) {
             locations += GeoLocation(coordinate.coordinate)
         }
-        //val timestampStrategy = TimestampStrategy(locations = locations)
         val interpolationStrategy = InterpolationStrategy(
             locations = locations,
-            startDelay = 1.seconds,
-            broadcastDelay = 500.milliseconds,
-            currentSpeedInMetersPerSecond = 13.0 // 30 mph; 50 km/h
+            currentSpeedInMetersPerSecond = configInstance.simulatedSpeed
         )
         val simulationLocationProvider = SimulationLocationProvider.create(interpolationStrategy)
         simulationLocationProvider.enable()
@@ -392,7 +434,10 @@ class MainActivity : AppCompatActivity() {
         mapMatchedLocationProvider.enable()
     }
     private fun setMapNavigationPadding() {
-        val paddingBottom = resources.getDimensionPixelOffset(R.dimen.map_padding_bottom)
+//        val paddingBottom = resources.getDimensionPixelOffset(R.dimen.map_padding_bottom)
+        // Show chevron marker about a third off the bottom of screen
+        // TODO: Chevron might be covered on small devices, like phones, by the info window
+        val paddingBottom = resources.displayMetrics.heightPixels / 3
         val padding = Padding(0, 0, 0, paddingBottom)
         tomTomMap.setPadding(padding)
     }
@@ -402,14 +447,39 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun stopNavigation() {
-        navigationFragment.stopNavigation()
+        if (::navigationFragment.isInitialized){
+            navigationFragment.stopNavigation()
+            navigationFragment.removeNavigationListener(navigationListener)
+            tomTomNavigation.removeOnProgressUpdateListener(onProgressUpdateListener)
+        }
         tomTomMap.changeCameraTrackingMode(CameraTrackingMode.NONE)
         tomTomMap.enableLocationMarker(LocationMarkerOptions(LocationMarkerOptions.Type.POINTER))
         resetMapPadding()
-        navigationFragment.removeNavigationListener(navigationListener)
-        tomTomNavigation.removeOnProgressUpdateListener(onProgressUpdateListener)
         clearMap()
         initLocationProvider()
         enableUserLocation()
+        window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+    }
+
+    override fun simulated(sim: Boolean) {
+        configInstance.isSimulated = sim
+    }
+
+    override fun mapMatched(mm: Boolean) {
+        configInstance.isMapMatched = mm
+    }
+
+    override fun showZoom(zoom: Boolean) {
+        configInstance.showZoomControl = zoom
+        mapFragment.zoomControlsView.isVisible = configInstance.showZoomControl
+    }
+
+    override fun showCompass(compass: Boolean) {
+        configInstance.showCompass = compass
+        mapFragment.compassButton.visibilityPolicy = if (configInstance.showCompass) CompassButton.VisibilityPolicy.VISIBLE else CompassButton.VisibilityPolicy.INVISIBLE
+    }
+
+    override fun darkStyle(ds: Boolean) {
+        configInstance.enableDarkStyleMode = ds
     }
 }

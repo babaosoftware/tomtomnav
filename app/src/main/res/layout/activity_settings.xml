@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="16dp"
+    tools:context=".SettingsActivity">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        >
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            >
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:text="Simulated Driving"
+                />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/simulated"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            >
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:text="Use Map Matching"
+                />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/mapmatched"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            >
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:text="Show Zoom Controls"
+                />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/zoom"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            >
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:text="Show Compass"
+                />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/compass"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            >
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:text="Enable Dark Style"
+                />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/dark"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

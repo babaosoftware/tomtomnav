@@ -32,7 +32,7 @@
         android:text="Route"
         android:textColor="@color/white"
         app:icon = "@drawable/route"
-        app:backgroundTint="@color/purple_700"
+        app:backgroundTint="@color/light_blue_900"
         app:iconTint="@color/white"
         app:layout_constraintStart_toStartOf="@id/guideline"
         app:layout_constraintEnd_toEndOf="@id/guideline"
@@ -47,10 +47,36 @@
         android:text="Navigate"
         android:textColor="@color/white"
         app:icon = "@drawable/navigation"
-        app:backgroundTint="@color/purple_700"
+        app:backgroundTint="@color/light_blue_900"
         app:iconTint="@color/white"
         app:layout_constraintStart_toStartOf="@id/guideline"
         app:layout_constraintEnd_toEndOf="@id/guideline"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_margin="8dp"
+        />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/nav_stop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        app:icon = "@drawable/close_nav"
+        app:backgroundTint="@color/light_blue_900"
+        app:iconTint="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_margin="8dp"
+        />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/settings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        app:icon = "@drawable/settings_icon"
+        app:backgroundTint="@color/light_blue_900"
+        app:iconTint="@color/white"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_margin="8dp"
         />
