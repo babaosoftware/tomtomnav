@@ -93,10 +93,15 @@ class MainActivity : AppCompatActivity(), SettingsCallback {
     private lateinit var settings: ExtendedFloatingActionButton
 
 
+//    private val myRoute = listOf(
+//        GeoPoint(41.416841, -73.4737747),
+//        GeoPoint(41.415115, -73.477221),
+//        GeoPoint(41.409467, -73.501574),
+//    )
+
     private val myRoute = listOf(
-        GeoPoint(41.416841, -73.4737747),
-        GeoPoint(41.415115, -73.477221),
-        GeoPoint(41.409467, -73.501574),
+        GeoPoint(41.426222, -73.491336),
+        GeoPoint(40.765385, -73.989570),
     )
 
     companion object {
@@ -437,7 +442,7 @@ class MainActivity : AppCompatActivity(), SettingsCallback {
 //        val paddingBottom = resources.getDimensionPixelOffset(R.dimen.map_padding_bottom)
         // Show chevron marker about a third off the bottom of screen
         // TODO: Chevron might be covered on small devices, like phones, by the info window
-        val paddingBottom = resources.displayMetrics.heightPixels / 3
+        val paddingBottom = (resources.displayMetrics.heightPixels * 0.4).toInt()
         val padding = Padding(0, 0, 0, paddingBottom)
         tomTomMap.setPadding(padding)
     }
