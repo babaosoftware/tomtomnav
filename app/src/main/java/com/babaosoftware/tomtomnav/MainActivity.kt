@@ -23,10 +23,11 @@ import androidx.core.content.ContextCompat
 import com.babaosoftware.tomtomnav.MainActivity.Companion.ZOOM_TO_ROUTE_PADDING
 import com.babaosoftware.tomtomnav.databinding.ActivityMainBinding
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-import com.tomtom.kotlin.quantity.Distance
-import com.tomtom.sdk.common.location.GeoLocation
-import com.tomtom.sdk.common.location.GeoPoint
-import com.tomtom.sdk.common.vehicle.Vehicle
+import com.tomtom.quantity.Distance
+import com.tomtom.sdk.location.GeoLocation
+import com.tomtom.sdk.location.GeoPoint
+import com.tomtom.sdk.location.LocationProvider
+import com.tomtom.sdk.vehicle.Vehicle
 import com.tomtom.sdk.location.android.AndroidLocationProvider
 import com.tomtom.sdk.location.android.AndroidLocationProviderConfig
 import com.tomtom.sdk.location.mapmatched.MapMatchedLocationProvider
@@ -46,18 +47,12 @@ import com.tomtom.sdk.map.display.route.Instruction
 import com.tomtom.sdk.map.display.route.RouteOptions
 import com.tomtom.sdk.map.display.ui.MapFragment
 import com.tomtom.sdk.map.display.ui.compass.CompassButton
-import com.tomtom.sdk.navigation.NavigationConfiguration
-import com.tomtom.sdk.navigation.NavigationError
-import com.tomtom.sdk.navigation.OnProgressUpdateListener
-import com.tomtom.sdk.navigation.OnRouteDeviationListener
-import com.tomtom.sdk.navigation.OnRouteUpdatedListener
-import com.tomtom.sdk.navigation.RoutePlan
-import com.tomtom.sdk.navigation.TomTomNavigation
+import com.tomtom.sdk.navigation.*
 import com.tomtom.sdk.navigation.routereplanner.DefaultRouteReplanner
 import com.tomtom.sdk.navigation.routereplanner.RouteReplanner
 import com.tomtom.sdk.navigation.ui.NavigationFragment
 import com.tomtom.sdk.navigation.ui.NavigationUiOptions
-import com.tomtom.sdk.route.Route
+import com.tomtom.sdk.routing.route.Route
 import com.tomtom.sdk.routing.RoutePlanner
 import com.tomtom.sdk.routing.RoutePlanningCallback
 import com.tomtom.sdk.routing.RoutePlanningResult
@@ -81,7 +76,7 @@ class MainActivity : AppCompatActivity(), SettingsCallback {
     private val mapKey = BuildConfig.MAP_KEY
     private lateinit var mapFragment: MapFragment
     private lateinit var tomTomMap: TomTomMap
-    private lateinit var locationProvider: AndroidLocationProvider
+    private lateinit var locationProvider: LocationProvider
     private lateinit var routePlanner: RoutePlanner
     private lateinit var routeReplanner: RouteReplanner
     private lateinit var routePlanningOptions: RoutePlanningOptions
@@ -294,7 +289,7 @@ class MainActivity : AppCompatActivity(), SettingsCallback {
     private fun enableUserLocation() {
         locationProvider.enable()
         tomTomMap.setLocationProvider(locationProvider)
-        val locationMarker = LocationMarkerOptions(type = LocationMarkerOptions.Type.POINTER)
+        val locationMarker = LocationMarkerOptions(type = LocationMarkerOptions.Type.Pointer)
         tomTomMap.enableLocationMarker(locationMarker)
     }
 
@@ -313,15 +308,16 @@ class MainActivity : AppCompatActivity(), SettingsCallback {
     private val routePlanningCallback = object : RoutePlanningCallback {
         override fun onSuccess(result: RoutePlanningResult) {
             route = result.routes.first()
-            drawRoute(route)
+            drawRoute(route!!)
         }
 
-        override fun onError(error: RoutingError) {
-            Toast.makeText(this@MainActivity, error.message, Toast.LENGTH_SHORT).show()
+        override fun onFailure(failure: RoutingError) {
+            Toast.makeText(this@MainActivity, failure.message, Toast.LENGTH_SHORT).show()
         }
 
         override fun onRoutePlanned(route: Route) = Unit
     }
+
     private fun addRoute(route: Route){
         tomTomMap.removeRoutes()
         val instructions = route.mapInstructions()
@@ -366,7 +362,7 @@ class MainActivity : AppCompatActivity(), SettingsCallback {
             locationProvider = locationProvider,
             routeReplanner = routeReplanner
         )
-        tomTomNavigation = TomTomNavigation.create(navigationConfiguration)
+        tomTomNavigation = TomTomNavigationFactory.create(navigationConfiguration)
 
         startNavigation(route)
     }
@@ -395,8 +391,8 @@ class MainActivity : AppCompatActivity(), SettingsCallback {
     private val navigationListener = object : NavigationFragment.NavigationListener {
         override fun onStarted() {
             tomTomMap.addOnCameraChangeListener(onCameraChangeListener)
-            tomTomMap.changeCameraTrackingMode(CameraTrackingMode.FOLLOW_ROUTE)
-            tomTomMap.enableLocationMarker(LocationMarkerOptions(LocationMarkerOptions.Type.CHEVRON))
+            tomTomMap.cameraTrackingMode = CameraTrackingMode.FollowRoute
+            tomTomMap.enableLocationMarker(LocationMarkerOptions(LocationMarkerOptions.Type.Chevron))
             if (configInstance.isSimulated)
                 setSimulationLocationProviderToNavigation()
             if (configInstance.isMapMatched)
@@ -419,13 +415,12 @@ class MainActivity : AppCompatActivity(), SettingsCallback {
     }
     private val onCameraChangeListener by lazy {
         OnCameraChangeListener {
-            // TODO: This will make the speed view to blink - solved in subsequent versions of the sdk
-//            val cameraTrackingMode = tomTomMap.cameraTrackingMode()
-//            if (cameraTrackingMode == CameraTrackingMode.FOLLOW_ROUTE) {
-//                navigationFragment.navigationView.showSpeedView()
-//            } else {
-//                navigationFragment.navigationView.hideSpeedView()
-//            }
+            val cameraTrackingMode = tomTomMap.cameraTrackingMode
+            if (cameraTrackingMode == CameraTrackingMode.FollowRoute) {
+                navigationFragment.navigationView.showSpeedView()
+            } else {
+                navigationFragment.navigationView.hideSpeedView()
+            }
         }
     }
 
@@ -434,20 +429,18 @@ class MainActivity : AppCompatActivity(), SettingsCallback {
     }
 
     private fun setSimulationLocationProviderToNavigation() {
-        var locations = listOf<GeoLocation>()
-        for (coordinate in route.routeCoordinates) {
-            locations += GeoLocation(coordinate.coordinate)
-        }
         val interpolationStrategy = InterpolationStrategy(
-            locations = locations,
+            locations = route.geometry.map { GeoLocation(it) },
             currentSpeedInMetersPerSecond = configInstance.simulatedSpeed
         )
-        val simulationLocationProvider = SimulationLocationProvider.create(interpolationStrategy)
-        simulationLocationProvider.enable()
-        tomTomNavigation.locationProvider = simulationLocationProvider
+        locationProvider = SimulationLocationProvider.create(interpolationStrategy)
+//        tomTomNavigation.navigationEngineRegistry.updateEngines(locationProvider = locationProvider)
+        tomTomMap.setLocationProvider(locationProvider)
+        locationProvider.enable()
     }
     private fun setMapMatchedLocationProvider() {
         val mapMatchedLocationProvider = MapMatchedLocationProvider(tomTomNavigation)
+//        tomTomNavigation.navigationEngineRegistry.updateEngines(locationProvider = mapMatchedLocationProvider)
         tomTomMap.setLocationProvider(mapMatchedLocationProvider)
         mapMatchedLocationProvider.enable()
     }
@@ -470,8 +463,8 @@ class MainActivity : AppCompatActivity(), SettingsCallback {
             navigationFragment.removeNavigationListener(navigationListener)
             tomTomNavigation.removeOnProgressUpdateListener(onProgressUpdateListener)
         }
-        tomTomMap.changeCameraTrackingMode(CameraTrackingMode.NONE)
-        tomTomMap.enableLocationMarker(LocationMarkerOptions(LocationMarkerOptions.Type.POINTER))
+        tomTomMap.cameraTrackingMode = CameraTrackingMode.None
+        tomTomMap.enableLocationMarker(LocationMarkerOptions(LocationMarkerOptions.Type.Pointer))
         resetMapPadding()
         clearMap()
         initLocationProvider()

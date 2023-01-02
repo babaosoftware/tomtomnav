@@ -63,10 +63,10 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.4'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
 
-    def version = "0.3.1106"
+    def version = "0.3.1307"
     implementation "com.tomtom.sdk.maps:map-display:$version"
-    implementation "com.tomtom.sdk.location:provider-android:$version"
     implementation "com.tomtom.sdk.routing:route-planner-online:$version"
+    implementation "com.tomtom.sdk.location:provider-android:$version"
     implementation "com.tomtom.sdk.location:provider-simulation:$version"
     implementation "com.tomtom.sdk.location:provider-map-matched:$version"
     implementation "com.tomtom.sdk.navigation:navigation:$version"
