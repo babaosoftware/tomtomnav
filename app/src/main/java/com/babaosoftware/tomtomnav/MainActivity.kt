@@ -10,6 +10,7 @@ import android.graphics.Canvas
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
@@ -48,6 +49,8 @@ import com.tomtom.sdk.map.display.ui.compass.CompassButton
 import com.tomtom.sdk.navigation.NavigationConfiguration
 import com.tomtom.sdk.navigation.NavigationError
 import com.tomtom.sdk.navigation.OnProgressUpdateListener
+import com.tomtom.sdk.navigation.OnRouteDeviationListener
+import com.tomtom.sdk.navigation.OnRouteUpdatedListener
 import com.tomtom.sdk.navigation.RoutePlan
 import com.tomtom.sdk.navigation.TomTomNavigation
 import com.tomtom.sdk.navigation.routereplanner.DefaultRouteReplanner
@@ -177,10 +180,10 @@ class MainActivity : AppCompatActivity(), SettingsCallback {
         mapFragment.getMapAsync { map ->
             tomTomMap = map
             setupPermissions()
-            if (configInstance.showZoomControl)
-                mapFragment.zoomControlsView.isVisible = true
-            if (configInstance.showCompass)
-                mapFragment.compassButton.visibilityPolicy = if (configInstance.showCompass) CompassButton.VisibilityPolicy.VISIBLE else CompassButton.VisibilityPolicy.INVISIBLE
+            showZoom(configInstance.showZoomControl)
+            showCompass(configInstance.showCompass)
+            showTrafficFlow(configInstance.showTrafficFlow)
+            showTrafficIncidents(configInstance.showTrafficIncidents)
             setupMapListeners()
         }
     }
@@ -319,16 +322,21 @@ class MainActivity : AppCompatActivity(), SettingsCallback {
 
         override fun onRoutePlanned(route: Route) = Unit
     }
-    private fun drawRoute(route: Route) {
+    private fun addRoute(route: Route){
+        tomTomMap.removeRoutes()
         val instructions = route.mapInstructions()
         val geometry = route.legs.flatMap { it.points }
         val routeOptions = RouteOptions(
             geometry = geometry,
             destinationMarkerVisible = true,
             departureMarkerVisible = true,
-            instructions = instructions
+            instructions = instructions,
         )
         tomTomMap.addRoute(routeOptions)
+    }
+
+    private fun drawRoute(route: Route) {
+        addRoute(route)
         tomTomMap.zoomToRoutes(ZOOM_TO_ROUTE_PADDING)
     }
 
@@ -381,6 +389,7 @@ class MainActivity : AppCompatActivity(), SettingsCallback {
         navigationFragment.addNavigationListener(navigationListener)
         navigationFragment.navigationView.showSpeedView()
         tomTomNavigation.addOnProgressUpdateListener(onProgressUpdateListener)
+        tomTomNavigation.addOnRouteUpdatedListener(onRouteUpdatedListener)
     }
 
     private val navigationListener = object : NavigationFragment.NavigationListener {
@@ -418,6 +427,10 @@ class MainActivity : AppCompatActivity(), SettingsCallback {
 //                navigationFragment.navigationView.hideSpeedView()
 //            }
         }
+    }
+
+    private val onRouteUpdatedListener = OnRouteUpdatedListener { route, updateReason ->
+        addRoute(route)
     }
 
     private fun setSimulationLocationProviderToNavigation() {
@@ -482,6 +495,22 @@ class MainActivity : AppCompatActivity(), SettingsCallback {
     override fun showCompass(compass: Boolean) {
         configInstance.showCompass = compass
         mapFragment.compassButton.visibilityPolicy = if (configInstance.showCompass) CompassButton.VisibilityPolicy.VISIBLE else CompassButton.VisibilityPolicy.INVISIBLE
+    }
+
+    override fun showTrafficFlow(flow: Boolean) {
+        configInstance.showTrafficFlow = flow
+        if (flow)
+            tomTomMap.showTrafficFlow()
+        else
+            tomTomMap.hideTrafficFlow()
+    }
+
+    override fun showTrafficIncidents(incidents: Boolean) {
+        configInstance.showTrafficIncidents = incidents
+        if (incidents)
+            tomTomMap.showTrafficIncidents()
+        else
+            tomTomMap.hideTrafficIncidents()
     }
 
     override fun darkStyle(ds: Boolean) {

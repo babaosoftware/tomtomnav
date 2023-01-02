@@ -7,5 +7,7 @@ interface SettingsCallback {
     fun mapMatched(mm: Boolean)
     fun showZoom(zoom: Boolean)
     fun showCompass(compass: Boolean)
+    fun showTrafficFlow(flow: Boolean)
+    fun showTrafficIncidents(incidents: Boolean)
     fun darkStyle(ds: Boolean)
 }

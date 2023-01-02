@@ -10,4 +10,6 @@ data class Config(
     var showZoomControl: Boolean = true,
     var showCompass: Boolean = true,
     var enableDarkStyleMode: Boolean = true,
+    var showTrafficFlow: Boolean = true,
+    var showTrafficIncidents: Boolean = true,
 )

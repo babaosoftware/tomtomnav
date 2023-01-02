@@ -16,6 +16,8 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var mapMatched: SwitchCompat
     private lateinit var zoom: SwitchCompat
     private lateinit var compass: SwitchCompat
+    private lateinit var flow: SwitchCompat
+    private lateinit var incidents: SwitchCompat
     private lateinit var dark: SwitchCompat
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,6 +45,14 @@ class SettingsActivity : AppCompatActivity() {
         compass = binding.compass
         compass.isChecked = configInstance.showCompass
         compass.setOnClickListener { settingsCallback!!.showCompass(compass.isChecked) }
+
+        flow = binding.flow
+        flow.isChecked = configInstance.showTrafficFlow
+        flow.setOnClickListener { settingsCallback!!.showTrafficFlow(flow.isChecked) }
+
+        incidents = binding.incidents
+        incidents.isChecked = configInstance.showTrafficIncidents
+        incidents.setOnClickListener { settingsCallback!!.showTrafficIncidents(incidents.isChecked) }
 
         dark = binding.dark
         dark.isChecked = configInstance.enableDarkStyleMode
