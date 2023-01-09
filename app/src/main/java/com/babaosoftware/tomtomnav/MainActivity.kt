@@ -102,10 +102,21 @@ class MainActivity : AppCompatActivity(), SettingsCallback {
 //        GeoPoint(41.409467, -73.501574),
 //    )
 
+    // private val myRoute = listOf(
+    //     GeoPoint(41.426222, -73.491336),
+    //     GeoPoint(40.765385, -73.989570),
+    // )
+
     private val myRoute = listOf(
-        GeoPoint(41.426222, -73.491336),
-        GeoPoint(40.765385, -73.989570),
+        GeoPoint(41.385473, -73.434461),
+        GeoPoint(41.385026, -73.433252), // ghost
+        GeoPoint(41.384787, -73.434339),
+        GeoPoint(41.383768, -73.434088), // ghost
+        GeoPoint(41.384064, -73.432882),
+        GeoPoint(41.383143, -73.433692), // ghost
+        GeoPoint(41.383047, -73.433184),
     )
+
 
     companion object {
         private const val ZOOM_TO_ROUTE_PADDING = 100
