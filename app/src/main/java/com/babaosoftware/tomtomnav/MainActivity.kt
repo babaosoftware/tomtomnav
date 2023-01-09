@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import androidx.appcompat.app.AppCompatActivity
@@ -52,6 +53,7 @@ import com.tomtom.sdk.navigation.routereplanner.DefaultRouteReplanner
 import com.tomtom.sdk.navigation.routereplanner.RouteReplanner
 import com.tomtom.sdk.navigation.ui.NavigationFragment
 import com.tomtom.sdk.navigation.ui.NavigationUiOptions
+import com.tomtom.sdk.navigation.ui.view.guidance.OnGuidanceViewBoundariesChangeListener
 import com.tomtom.sdk.routing.route.Route
 import com.tomtom.sdk.routing.RoutePlanner
 import com.tomtom.sdk.routing.RoutePlanningCallback
@@ -59,6 +61,7 @@ import com.tomtom.sdk.routing.RoutePlanningResult
 import com.tomtom.sdk.routing.common.RoutingError
 import com.tomtom.sdk.routing.common.options.Itinerary
 import com.tomtom.sdk.routing.common.options.RoutePlanningOptions
+import com.tomtom.sdk.routing.common.options.calculation.*
 import com.tomtom.sdk.routing.common.options.guidance.*
 import com.tomtom.sdk.routing.online.OnlineRoutePlanner
 import org.json.JSONArray
@@ -97,9 +100,19 @@ class MainActivity : AppCompatActivity(), SettingsCallback {
 //        GeoPoint(41.409467, -73.501574),
 //    )
 
+//    private val myRoute = listOf(
+//        GeoPoint(41.426222, -73.491336),
+//        GeoPoint(40.765385, -73.989570),
+//    )
+
     private val myRoute = listOf(
-        GeoPoint(41.426222, -73.491336),
-        GeoPoint(40.765385, -73.989570),
+        GeoPoint(41.385473, -73.434461),
+        GeoPoint(41.385026, -73.433252), // ghost
+        GeoPoint(41.384787, -73.434339),
+        GeoPoint(41.383768, -73.434088), // ghost
+        GeoPoint(41.384064, -73.432882),
+        GeoPoint(41.383143, -73.433692), // ghost
+        GeoPoint(41.383047, -73.433184),
     )
 
     companion object {
@@ -166,6 +179,16 @@ class MainActivity : AppCompatActivity(), SettingsCallback {
         }
     }
 
+//    override fun onConfigurationChanged(newConfig: Configuration) {
+//        super.onConfigurationChanged(newConfig)
+//        if (::navigationFragment.isInitialized) {
+//            navigationFragment.navigationView.hideGuidanceView()
+//            Handler().postDelayed({
+//                navigationFragment.navigationView.showGuidanceView()
+//            }, 1000)
+//        }
+//    }
+
     private fun initMap() {
         val mapOptions = MapOptions(mapKey = mapKey, cameraOptions = CameraOptions(zoom = configInstance.startZoom))
         mapFragment = MapFragment.newInstance(mapOptions)
@@ -205,6 +228,7 @@ class MainActivity : AppCompatActivity(), SettingsCallback {
 
         routePlanningOptions = RoutePlanningOptions(
             itinerary = itinerary,
+            costModel = CostModel(RouteType.Short, ConsiderTraffic.No, AvoidOptions(setOf(AvoidType.AlreadyUsedRoads))),
             guidanceOptions = GuidanceOptions(
                 instructionType = InstructionType.Text,
                 phoneticsType = InstructionPhoneticsType.Ipa,
@@ -212,7 +236,7 @@ class MainActivity : AppCompatActivity(), SettingsCallback {
                 extendedSections = ExtendedSections.All,
                 progressPoints = ProgressPoints.All
             ),
-            vehicle = Vehicle.Car()
+            vehicle = Vehicle.Bus()
         )
         routePlanner.planRoute(routePlanningOptions, routePlanningCallback)
     }
@@ -289,8 +313,7 @@ class MainActivity : AppCompatActivity(), SettingsCallback {
     private fun enableUserLocation() {
         locationProvider.enable()
         tomTomMap.setLocationProvider(locationProvider)
-        val locationMarker = LocationMarkerOptions(type = LocationMarkerOptions.Type.Pointer)
-        tomTomMap.enableLocationMarker(locationMarker)
+        tomTomMap.enableLocationMarker(LocationMarkerOptions(LocationMarkerOptions.Type.Pointer))
     }
 
     private fun setupMapListeners() {
@@ -321,9 +344,8 @@ class MainActivity : AppCompatActivity(), SettingsCallback {
     private fun addRoute(route: Route){
         tomTomMap.removeRoutes()
         val instructions = route.mapInstructions()
-        val geometry = route.legs.flatMap { it.points }
         val routeOptions = RouteOptions(
-            geometry = geometry,
+            geometry = route.geometry,
             destinationMarkerVisible = true,
             departureMarkerVisible = true,
             instructions = instructions,
@@ -386,6 +408,10 @@ class MainActivity : AppCompatActivity(), SettingsCallback {
         navigationFragment.navigationView.showSpeedView()
         tomTomNavigation.addOnProgressUpdateListener(onProgressUpdateListener)
         tomTomNavigation.addOnRouteUpdatedListener(onRouteUpdatedListener)
+//        navigationFragment.navigationView.addGuidanceViewBoundariesChangeListener {
+//            Log.v("guidanceview", "top:${it.top} bottom:${it.bottom} height:${it.height}")
+//
+//        }
     }
 
     private val navigationListener = object : NavigationFragment.NavigationListener {
@@ -440,7 +466,6 @@ class MainActivity : AppCompatActivity(), SettingsCallback {
     }
     private fun setMapMatchedLocationProvider() {
         val mapMatchedLocationProvider = MapMatchedLocationProvider(tomTomNavigation)
-//        tomTomNavigation.navigationEngineRegistry.updateEngines(locationProvider = mapMatchedLocationProvider)
         tomTomMap.setLocationProvider(mapMatchedLocationProvider)
         mapMatchedLocationProvider.enable()
     }
@@ -464,7 +489,6 @@ class MainActivity : AppCompatActivity(), SettingsCallback {
             tomTomNavigation.removeOnProgressUpdateListener(onProgressUpdateListener)
         }
         tomTomMap.cameraTrackingMode = CameraTrackingMode.None
-        tomTomMap.enableLocationMarker(LocationMarkerOptions(LocationMarkerOptions.Type.Pointer))
         resetMapPadding()
         clearMap()
         initLocationProvider()
