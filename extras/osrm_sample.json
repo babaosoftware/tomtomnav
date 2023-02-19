@@ -1,0 +1,747 @@
+{
+    "code": "Ok",
+    "routes": [
+        {
+            "geometry": {
+                "coordinates": [
+                    [
+                        -121.785478,
+                        47.492699
+                    ],
+                    [
+                        -121.785525,
+                        47.492712
+                    ],
+                    [
+                        -121.785641,
+                        47.492767
+                    ],
+                    [
+                        -121.785808,
+                        47.492844
+                    ],
+                    [
+                        -121.786055,
+                        47.492958
+                    ],
+                    [
+                        -121.786225,
+                        47.493036
+                    ],
+                    [
+                        -121.786734,
+                        47.493272
+                    ],
+                    [
+                        -121.786758,
+                        47.493283
+                    ],
+                    [
+                        -121.78685,
+                        47.493326
+                    ],
+                    [
+                        -121.787189,
+                        47.493483
+                    ],
+                    [
+                        -121.786942,
+                        47.493725
+                    ],
+                    [
+                        -121.786848,
+                        47.493816
+                    ],
+                    [
+                        -121.786701,
+                        47.493959
+                    ],
+                    [
+                        -121.78634,
+                        47.494312
+                    ],
+                    [
+                        -121.78628,
+                        47.494371
+                    ],
+                    [
+                        -121.786258,
+                        47.494392
+                    ],
+                    [
+                        -121.786207,
+                        47.494443
+                    ],
+                    [
+                        -121.786174,
+                        47.494469
+                    ],
+                    [
+                        -121.786094,
+                        47.494547
+                    ],
+                    [
+                        -121.785838,
+                        47.494816
+                    ],
+                    [
+                        -121.785753,
+                        47.494897
+                    ],
+                    [
+                        -121.785626,
+                        47.494836
+                    ],
+                    [
+                        -121.785158,
+                        47.494622
+                    ],
+                    [
+                        -121.784891,
+                        47.494499
+                    ],
+                    [
+                        -121.784718,
+                        47.494419
+                    ],
+                    [
+                        -121.784564,
+                        47.494349
+                    ],
+                    [
+                        -121.784647,
+                        47.494275
+                    ],
+                    [
+                        -121.784718,
+                        47.494195
+                    ],
+                    [
+                        -121.784931,
+                        47.493987
+                    ],
+                    [
+                        -121.784629,
+                        47.493841
+                    ],
+                    [
+                        -121.784361,
+                        47.49371
+                    ],
+                    [
+                        -121.784255,
+                        47.493658
+                    ],
+                    [
+                        -121.784064,
+                        47.493565
+                    ]
+                ],
+                "type": "LineString"
+            },
+            "legs": [
+                {
+                    "steps": [
+                        {
+                            "geometry": {
+                                "coordinates": [
+                                    [
+                                        -121.785478,
+                                        47.492699
+                                    ],
+                                    [
+                                        -121.785525,
+                                        47.492712
+                                    ],
+                                    [
+                                        -121.785641,
+                                        47.492767
+                                    ],
+                                    [
+                                        -121.785808,
+                                        47.492844
+                                    ],
+                                    [
+                                        -121.786055,
+                                        47.492958
+                                    ],
+                                    [
+                                        -121.786225,
+                                        47.493036
+                                    ],
+                                    [
+                                        -121.786734,
+                                        47.493272
+                                    ],
+                                    [
+                                        -121.786758,
+                                        47.493283
+                                    ],
+                                    [
+                                        -121.78685,
+                                        47.493326
+                                    ],
+                                    [
+                                        -121.787189,
+                                        47.493483
+                                    ]
+                                ],
+                                "type": "LineString"
+                            },
+                            "maneuver": {
+                                "bearing_after": 292,
+                                "bearing_before": 0,
+                                "location": [
+                                    -121.785478,
+                                    47.492699
+                                ],
+                                "type": "depart"
+                            },
+                            "mode": "driving",
+                            "driving_side": "right",
+                            "name": "East Park Street",
+                            "intersections": [
+                                {
+                                    "out": 0,
+                                    "entry": [
+                                        true
+                                    ],
+                                    "bearings": [
+                                        292
+                                    ],
+                                    "location": [
+                                        -121.785478,
+                                        47.492699
+                                    ]
+                                },
+                                {
+                                    "out": 2,
+                                    "in": 0,
+                                    "entry": [
+                                        false,
+                                        true,
+                                        true
+                                    ],
+                                    "bearings": [
+                                        120,
+                                        210,
+                                        300
+                                    ],
+                                    "location": [
+                                        -121.785808,
+                                        47.492844
+                                    ]
+                                },
+                                {
+                                    "out": 3,
+                                    "in": 1,
+                                    "entry": [
+                                        true,
+                                        false,
+                                        true,
+                                        true
+                                    ],
+                                    "bearings": [
+                                        30,
+                                        120,
+                                        210,
+                                        300
+                                    ],
+                                    "location": [
+                                        -121.786225,
+                                        47.493036
+                                    ]
+                                }
+                            ],
+                            "weight": 24.5,
+                            "duration": 24.5,
+                            "distance": 155.8
+                        },
+                        {
+                            "geometry": {
+                                "coordinates": [
+                                    [
+                                        -121.787189,
+                                        47.493483
+                                    ],
+                                    [
+                                        -121.786942,
+                                        47.493725
+                                    ],
+                                    [
+                                        -121.786848,
+                                        47.493816
+                                    ],
+                                    [
+                                        -121.786701,
+                                        47.493959
+                                    ]
+                                ],
+                                "type": "LineString"
+                            },
+                            "maneuver": {
+                                "bearing_after": 33,
+                                "bearing_before": 303,
+                                "location": [
+                                    -121.787189,
+                                    47.493483
+                                ],
+                                "modifier": "right",
+                                "type": "turn"
+                            },
+                            "mode": "driving",
+                            "driving_side": "right",
+                            "name": "Main Avenue South",
+                            "intersections": [
+                                {
+                                    "out": 0,
+                                    "in": 1,
+                                    "entry": [
+                                        true,
+                                        false,
+                                        true,
+                                        true
+                                    ],
+                                    "bearings": [
+                                        30,
+                                        120,
+                                        210,
+                                        300
+                                    ],
+                                    "location": [
+                                        -121.787189,
+                                        47.493483
+                                    ]
+                                }
+                            ],
+                            "weight": 9.3,
+                            "duration": 9.3,
+                            "distance": 64.5
+                        },
+                        {
+                            "geometry": {
+                                "coordinates": [
+                                    [
+                                        -121.786701,
+                                        47.493959
+                                    ],
+                                    [
+                                        -121.786701,
+                                        47.493959
+                                    ]
+                                ],
+                                "type": "LineString"
+                            },
+                            "maneuver": {
+                                "bearing_after": 0,
+                                "bearing_before": 35,
+                                "location": [
+                                    -121.786701,
+                                    47.493959
+                                ],
+                                "type": "arrive"
+                            },
+                            "mode": "driving",
+                            "driving_side": "right",
+                            "name": "Main Avenue South",
+                            "intersections": [
+                                {
+                                    "in": 0,
+                                    "entry": [
+                                        true
+                                    ],
+                                    "bearings": [
+                                        215
+                                    ],
+                                    "location": [
+                                        -121.786701,
+                                        47.493959
+                                    ]
+                                }
+                            ],
+                            "weight": 0,
+                            "duration": 0,
+                            "distance": 0
+                        }
+                    ],
+                    "summary": "East Park Street, Main Avenue South",
+                    "weight": 33.8,
+                    "duration": 33.8,
+                    "distance": 220.2
+                },
+                {
+                    "steps": [
+                        {
+                            "geometry": {
+                                "coordinates": [
+                                    [
+                                        -121.786701,
+                                        47.493959
+                                    ],
+                                    [
+                                        -121.78634,
+                                        47.494312
+                                    ],
+                                    [
+                                        -121.78628,
+                                        47.494371
+                                    ],
+                                    [
+                                        -121.786258,
+                                        47.494392
+                                    ],
+                                    [
+                                        -121.786207,
+                                        47.494443
+                                    ],
+                                    [
+                                        -121.786174,
+                                        47.494469
+                                    ],
+                                    [
+                                        -121.786094,
+                                        47.494547
+                                    ],
+                                    [
+                                        -121.785838,
+                                        47.494816
+                                    ],
+                                    [
+                                        -121.785753,
+                                        47.494897
+                                    ]
+                                ],
+                                "type": "LineString"
+                            },
+                            "maneuver": {
+                                "bearing_after": 35,
+                                "bearing_before": 0,
+                                "location": [
+                                    -121.786701,
+                                    47.493959
+                                ],
+                                "type": "depart"
+                            },
+                            "mode": "driving",
+                            "driving_side": "right",
+                            "name": "Main Avenue South",
+                            "intersections": [
+                                {
+                                    "out": 0,
+                                    "entry": [
+                                        true
+                                    ],
+                                    "bearings": [
+                                        35
+                                    ],
+                                    "location": [
+                                        -121.786701,
+                                        47.493959
+                                    ]
+                                },
+                                {
+                                    "out": 0,
+                                    "in": 2,
+                                    "entry": [
+                                        true,
+                                        false,
+                                        false,
+                                        true
+                                    ],
+                                    "bearings": [
+                                        30,
+                                        120,
+                                        210,
+                                        300
+                                    ],
+                                    "location": [
+                                        -121.786094,
+                                        47.494547
+                                    ]
+                                }
+                            ],
+                            "weight": 20.200000000,
+                            "duration": 20.200000000,
+                            "distance": 126.5
+                        },
+                        {
+                            "geometry": {
+                                "coordinates": [
+                                    [
+                                        -121.785753,
+                                        47.494897
+                                    ],
+                                    [
+                                        -121.785626,
+                                        47.494836
+                                    ],
+                                    [
+                                        -121.785158,
+                                        47.494622
+                                    ],
+                                    [
+                                        -121.784891,
+                                        47.494499
+                                    ],
+                                    [
+                                        -121.784718,
+                                        47.494419
+                                    ],
+                                    [
+                                        -121.784564,
+                                        47.494349
+                                    ]
+                                ],
+                                "type": "LineString"
+                            },
+                            "maneuver": {
+                                "bearing_after": 123,
+                                "bearing_before": 32,
+                                "location": [
+                                    -121.785753,
+                                    47.494897
+                                ],
+                                "modifier": "right",
+                                "type": "turn"
+                            },
+                            "mode": "driving",
+                            "driving_side": "right",
+                            "name": "East North Bend Way",
+                            "intersections": [
+                                {
+                                    "out": 1,
+                                    "in": 2,
+                                    "entry": [
+                                        true,
+                                        true,
+                                        false,
+                                        true
+                                    ],
+                                    "bearings": [
+                                        30,
+                                        120,
+                                        210,
+                                        315
+                                    ],
+                                    "location": [
+                                        -121.785753,
+                                        47.494897
+                                    ]
+                                }
+                            ],
+                            "weight": 14.3,
+                            "duration": 14.3,
+                            "distance": 108.4
+                        },
+                        {
+                            "geometry": {
+                                "coordinates": [
+                                    [
+                                        -121.784564,
+                                        47.494349
+                                    ],
+                                    [
+                                        -121.784647,
+                                        47.494275
+                                    ],
+                                    [
+                                        -121.784718,
+                                        47.494195
+                                    ],
+                                    [
+                                        -121.784931,
+                                        47.493987
+                                    ]
+                                ],
+                                "type": "LineString"
+                            },
+                            "maneuver": {
+                                "bearing_after": 213,
+                                "bearing_before": 123,
+                                "location": [
+                                    -121.784564,
+                                    47.494349
+                                ],
+                                "modifier": "right",
+                                "type": "turn"
+                            },
+                            "mode": "driving",
+                            "driving_side": "right",
+                            "name": "Ballarat Avenue South",
+                            "intersections": [
+                                {
+                                    "out": 2,
+                                    "in": 3,
+                                    "entry": [
+                                        true,
+                                        true,
+                                        true,
+                                        false
+                                    ],
+                                    "bearings": [
+                                        30,
+                                        135,
+                                        210,
+                                        300
+                                    ],
+                                    "location": [
+                                        -121.784564,
+                                        47.494349
+                                    ]
+                                }
+                            ],
+                            "weight": 12.4,
+                            "duration": 12.4,
+                            "distance": 48.9
+                        },
+                        {
+                            "geometry": {
+                                "coordinates": [
+                                    [
+                                        -121.784931,
+                                        47.493987
+                                    ],
+                                    [
+                                        -121.784629,
+                                        47.493841
+                                    ],
+                                    [
+                                        -121.784361,
+                                        47.49371
+                                    ],
+                                    [
+                                        -121.784255,
+                                        47.493658
+                                    ],
+                                    [
+                                        -121.784064,
+                                        47.493565
+                                    ]
+                                ],
+                                "type": "LineString"
+                            },
+                            "maneuver": {
+                                "bearing_after": 125,
+                                "bearing_before": 213,
+                                "location": [
+                                    -121.784931,
+                                    47.493987
+                                ],
+                                "modifier": "left",
+                                "type": "turn"
+                            },
+                            "mode": "driving",
+                            "driving_side": "right",
+                            "name": "East McClellan Street",
+                            "intersections": [
+                                {
+                                    "out": 1,
+                                    "in": 0,
+                                    "entry": [
+                                        false,
+                                        true,
+                                        true
+                                    ],
+                                    "bearings": [
+                                        30,
+                                        120,
+                                        300
+                                    ],
+                                    "location": [
+                                        -121.784931,
+                                        47.493987
+                                    ]
+                                }
+                            ],
+                            "weight": 11.6,
+                            "duration": 11.6,
+                            "distance": 80.5
+                        },
+                        {
+                            "geometry": {
+                                "coordinates": [
+                                    [
+                                        -121.784064,
+                                        47.493565
+                                    ],
+                                    [
+                                        -121.784064,
+                                        47.493565
+                                    ]
+                                ],
+                                "type": "LineString"
+                            },
+                            "maneuver": {
+                                "bearing_after": 0,
+                                "bearing_before": 126,
+                                "location": [
+                                    -121.784064,
+                                    47.493565
+                                ],
+                                "type": "arrive"
+                            },
+                            "mode": "driving",
+                            "driving_side": "right",
+                            "name": "East McClellan Street",
+                            "intersections": [
+                                {
+                                    "in": 0,
+                                    "entry": [
+                                        true
+                                    ],
+                                    "bearings": [
+                                        306
+                                    ],
+                                    "location": [
+                                        -121.784064,
+                                        47.493565
+                                    ]
+                                }
+                            ],
+                            "weight": 0,
+                            "duration": 0,
+                            "distance": 0
+                        }
+                    ],
+                    "summary": "Main Avenue South, East North Bend Way",
+                    "weight": 58.5,
+                    "duration": 58.5,
+                    "distance": 364.2
+                }
+            ],
+            "weight_name": "routability",
+            "weight": 92.3,
+            "duration": 92.3,
+            "distance": 584.4
+        }
+    ],
+    "waypoints": [
+        {
+            "hint": "KSQ9gMV4PoAGAAAABgAAAAoAAAAlAAAANHSLQEHidEBtq9ZA9SXPQQYAAAAGAAAACgAAACUAAAC_WgAAerO9-Fuu1AJ2s734Va7UAgEAPxJFCwru",
+            "distance": 0.732058212,
+            "name": "East Park Street",
+            "location": [
+                -121.785478,
+                47.492699
+            ]
+        },
+        {
+            "hint": "MeZ_hz3mf4ccAAAARQAAAAAAAAAAAAAAngibQboHP0IAAAAAAAAAABwAAABFAAAAAAAAAAAAAAC_WgAAs669-Eez1AKprr34TLPUAgAALwJFCwru",
+            "distance": 0.936605394,
+            "name": "Main Avenue South",
+            "location": [
+                -121.786701,
+                47.493959
+            ]
+        },
+        {
+            "hint": "gUbFhBPof4cNAAAAGgAAAAAAAAAOAAAAitMZQQnOjUEAAAAAiMwdQQ0AAAAaAAAAAAAAAA4AAAC_WgAAALm9-L2x1AIQub34zLHUAgAAHxNFCwru",
+            "distance": 2.058113543,
+            "name": "East McClellan Street",
+            "location": [
+                -121.784064,
+                47.493565
+            ]
+        }
+    ]
+}
